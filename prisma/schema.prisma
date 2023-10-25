@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "foreignKeys"
+}
+
+model tbl_toys {
+  id_toy Int @id @default(autoincrement())
+  uuid String @default(uuid())
+  id_usuario String
+  nombre String @db.Text
+  descripcion String? @db.Text
+  imagen_url String? @db.Text
+  precio Float?
+  inventario Int 
+
+  id_categoria Int?
+  categoria tbl_categorias? @relation(fields: [id_categoria], references: [id_categoria])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([id_categoria])
+}
+
+model tbl_categorias {
+  id_categoria Int @id @default(autoincrement())
+  uuid String @default(uuid())
+  nombre String @unique
+  descripcion String? @db.Text
+  toys tbl_toys[]
+}

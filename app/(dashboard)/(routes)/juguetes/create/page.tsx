@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 
 const formSchema = z.object({
-    titulo: z.string().min(1, {
-        message: "El título es requerido",
+    nombre: z.string().min(1, {
+        message: "El nombre es requerido",
     }),
 });
 
@@ -23,7 +23,7 @@ const CreatePage = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            titulo: "",
+            nombre: "",
         },
     });
 
@@ -36,13 +36,15 @@ const CreatePage = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const response = await axios.post("/api/courses", values);
-            router.push(`/teacher/courses/${response.data.id}`);
+            const response = await axios.post("/api/juguetes", values);
+            router.push(`/juguetes/${response.data.uuid}`);
+            toast.success("Juguete creado");
         } catch (error) {
             //console.log("ha ocurrido un error");
             toast.error("Ha ocurrido un error");
         }
     }
+
 
     return (
         <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
@@ -58,7 +60,7 @@ const CreatePage = () => {
                     >
                         <FormField
                             control={form.control}
-                            name="titulo"
+                            name="nombre"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
