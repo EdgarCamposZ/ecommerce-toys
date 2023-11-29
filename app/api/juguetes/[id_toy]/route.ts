@@ -15,7 +15,7 @@ export async function PATCH(
             return new NextResponse("No autorizado", { status: 401 });
         }
 
-        const course = await db.tbl_toys.update({
+        const juguete = await db.tbl_toys.update({
             where: {
                 id_toy: parseInt(id_toy),
                 id_usuario: userId
@@ -25,7 +25,7 @@ export async function PATCH(
             }
         });
 
-        return NextResponse.json(course);
+        return NextResponse.json(juguete);
     } catch (error) {
         console.log("[JUGUETE_ID]", error);
         return new NextResponse("Internal Error", { status: 500 });

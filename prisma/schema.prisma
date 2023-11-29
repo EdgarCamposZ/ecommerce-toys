@@ -6,23 +6,25 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "foreignKeys"
 }
 
 model tbl_toys {
-  id_toy Int @id @default(autoincrement())
-  uuid String @default(uuid())
-  id_usuario String
-  nombre String @db.Text
+  id_toy      Int     @id @default(autoincrement())
+  uuid        String  @default(uuid())
+  id_usuario  String
+  nombre      String  @db.Text
   descripcion String? @db.Text
-  imagen_url String? @db.Text
-  precio Float?
-  inventario Int 
+  imagen_url  String? @db.Text
+  precio      Float?
+  inventario  Int
 
   id_categoria Int?
-  categoria tbl_categorias? @relation(fields: [id_categoria], references: [id_categoria])
+  categoria    tbl_categorias? @relation(fields: [id_categoria], references: [id_categoria])
+
+  adjuntos tbl_adjuntos[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -31,9 +33,24 @@ model tbl_toys {
 }
 
 model tbl_categorias {
-  id_categoria Int @id @default(autoincrement())
-  uuid String @default(uuid())
-  nombre String @unique
-  descripcion String? @db.Text
-  toys tbl_toys[]
+  id_categoria Int        @id @default(autoincrement())
+  uuid         String     @default(uuid())
+  nombre       String     @unique
+  descripcion  String?    @db.Text
+  toys         tbl_toys[]
+}
+
+model tbl_adjuntos {
+  id_adjunto Int    @id @default(autoincrement())
+  uuid       String @default(uuid())
+  nombre     String
+  url        String @db.Text
+
+  id_toy Int
+  toy    tbl_toys @relation(fields: [id_toy], references: [id_toy], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([id_toy])
 }

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 //import { IconBadge } from "@/components/IconBadge";
 import { LayoutDashboard } from "lucide-react";
-import { TitleForm } from "./_components/TitleForm";
+import { TitleForm } from "./_components/NombreForm";
 import { DescriptionForm } from "./_components/DescriptionForm";
 import { ImageForm } from "./_components/ImageForm";
 
