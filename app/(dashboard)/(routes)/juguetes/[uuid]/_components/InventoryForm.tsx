@@ -8,6 +8,7 @@ import { Pencil } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { tbl_toys } from "@prisma/client";
 
 import {
     Form,
@@ -16,32 +17,28 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
-interface TitleFormProps {
-    initialData: {
-        nombre: string;
-    };
+interface InventoryFormProps {
+    initialData: tbl_toys;
     id_toy: number;
-};
+}
 
 const formSchema = z.object({
-    nombre: z.string().min(5, {
-        message: "El nombre es requerido",
+    inventario: z.number().min(0, {
+        message: "El inventario debe ser un número entero no negativo",
     }),
 });
 
-export const TitleForm = ({
-    initialData,
-    id_toy
-}: TitleFormProps) => {
+export const InventoryForm = ({ initialData, id_toy }: InventoryFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const toggleEdit = () => {
         setIsEditing((current) => !current);
         if (!isEditing) {
-            form.setValue("nombre", initialData.nombre);
+            form.setValue("inventario", initialData?.inventario || 0);
         }
     };
 
@@ -49,7 +46,9 @@ export const TitleForm = ({
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData,
+        defaultValues: {
+            inventario: initialData?.inventario || 0,
+        },
     });
 
     const { isSubmitting, isValid } = form.formState;
@@ -57,49 +56,57 @@ export const TitleForm = ({
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             await axios.patch(`/api/juguetes/${id_toy}`, values);
-            toast.success("Juguete Actualizado");
+            toast.success("Inventario del juguete actualizado");
             toggleEdit();
             router.refresh();
         } catch {
-            toast.error("Sucedio un error");
+            toast.error(
+                "Sucedio un error al actualizar el inventario del juguete"
+            );
         }
-    }
+    };
 
     return (
         <div className="mt-6 border bg-[#cfcfcf] dark:bg-[#1f1f1f] rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Nombre del juguete
+                Inventario del juguete
                 <Button onClick={toggleEdit} variant="customghost">
                     {isEditing ? (
                         <>Cancelar</>
                     ) : (
                         <>
                             <Pencil className="h-4 w-4 mr-2" />
-                            Editar nombre
+                            Editar inventario
                         </>
                     )}
                 </Button>
             </div>
             {!isEditing && (
-                <p className="text-xl mt-2">
-                    {initialData.nombre}
+                <p
+                    className={cn(
+                        "text-sm",
+                        "text-slate-700 dark:text-white",
+                        "mt-2",
+                        !initialData.inventario && "italic"
+                    )}
+                >
+                    {initialData.inventario || "* Sin inventario *"}
                 </p>
             )}
             {isEditing && (
                 <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-4 mt-4"
-                    >
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
                         <FormField
                             control={form.control}
-                            name="nombre"
+                            name="inventario"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
                                         <Input
+                                            type="number"
+                                            min="0"
                                             disabled={isSubmitting}
-                                            placeholder="ej. 'Naruto modo kurama'"
+                                            placeholder="ej. 100"
                                             {...field}
                                         />
                                     </FormControl>
@@ -120,5 +127,5 @@ export const TitleForm = ({
                 </Form>
             )}
         </div>
-    )
-}
+    );
+};

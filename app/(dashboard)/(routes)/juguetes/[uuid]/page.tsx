@@ -2,10 +2,15 @@ import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 //import { IconBadge } from "@/components/IconBadge";
-import { LayoutDashboard } from "lucide-react";
+import { CircleDollarSign, ClipboardList, ImagePlus, LayoutDashboard } from "lucide-react";
 import { TitleForm } from "./_components/NombreForm";
 import { DescriptionForm } from "./_components/DescriptionForm";
 import { ImageForm } from "./_components/ImageForm";
+import { CategoriesForm } from "./_components/CategoriesForm";
+import { PriceForm } from "./_components/PriceForm";
+import { Prisma } from "@prisma/client";
+import { AttachmentsForm } from "./_components/AttachmentsForm";
+import { InventoryForm } from "./_components/InventoryForm";
 
 const JugueteUuidPage = async ({
     params
@@ -23,8 +28,27 @@ const JugueteUuidPage = async ({
         where: {
             uuid: params.uuid,
             id_usuario: userId
+        },
+        include: {
+            categoria: true,
+            adjuntos: true
+        },
+    });
+
+    const categories = await db.tbl_categorias.findMany({
+        orderBy: {
+            nombre: "asc"
         }
     });
+
+    // if (juguete?.id_categoria !== null) {
+    //     let category = await db.tbl_categorias.findUnique({
+    //         where: {
+    //             id_categoria: juguete?.id_categoria
+    //         }
+    //     });
+    //     var categoryName = category?.nombre;
+    // }
 
     if (!juguete) {
         return redirect("/");
@@ -73,7 +97,54 @@ const JugueteUuidPage = async ({
                         initialData={juguete}
                         id_toy={juguete.id_toy}
                     />
+                    <CategoriesForm
+                        initialData={juguete}
+                        id_toy={juguete.id_toy}
+                        options={categories.map((category) => ({
+                            label: category.nombre,
+                            value: category.id_categoria,
+                        }))}
+                    //category={categoryName}
+                    />
                     <ImageForm
+                        initialData={juguete}
+                        id_toy={juguete.id_toy}
+                    />
+                </div>
+                <div className="space-y-6">
+                    <div className="flex items-center gap-x-2">
+                        <div className="rounded-full flex items-center justify-center bg-sky-100 dark:bg-[#1f1f1f] p-2">
+                            <CircleDollarSign className="h-8 w-8 text-teal-700 dark:text-yellow-500" />
+                        </div>
+                        <h2 className="text-xl">
+                            Pon precio a tu juguete
+                        </h2>
+                    </div>
+                    <PriceForm
+                        initialData={juguete}
+                        id_toy={juguete.id_toy}
+                    />
+                    <div className="flex items-center gap-x-2">
+                        <div className="rounded-full flex items-center justify-center bg-sky-100 dark:bg-[#1f1f1f] p-2">
+                            <ClipboardList className="h-8 w-8 text-teal-700 dark:text-yellow-500" />
+                        </div>
+                        <h2 className="text-xl">
+                            Inventario del juguete
+                        </h2>
+                    </div>
+                    <InventoryForm
+                        initialData={juguete}
+                        id_toy={juguete.id_toy}
+                    />
+                    <div className="flex items-center gap-x-2">
+                        <div className="rounded-full flex items-center justify-center bg-sky-100 dark:bg-[#1f1f1f] p-2">
+                            <ImagePlus className="h-8 w-8 text-teal-700 dark:text-yellow-500" />
+                        </div>
+                        <h2 className="text-xl">
+                            Imagenes del juguete (Opcional)
+                        </h2>
+                        I</div>
+                    <AttachmentsForm
                         initialData={juguete}
                         id_toy={juguete.id_toy}
                     />

@@ -46,7 +46,7 @@ export const ImageForm = ({
     return (
         <div className="mt-6 border bg-[#cfcfcf] dark:bg-[#1f1f1f] rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Imagen del juguete
+                Imagen principal
                 <Button onClick={toggleEdit} variant="customghost">
                     {isEditing && (
                         <>Cancelar</>

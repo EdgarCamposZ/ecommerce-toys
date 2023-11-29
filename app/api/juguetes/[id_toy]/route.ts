@@ -2,6 +2,41 @@ import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
+export async function DELETE(
+    req: Request,
+    { params }: { params: { id_toy: string } }
+) {
+    try {
+        const { userId } = auth();
+
+        if (!userId) {
+            return new NextResponse("No Autorizado", { status: 401 });
+        }
+
+        const Juguete = await db.tbl_toys.findUnique({
+            where: {
+                id_toy: parseInt(params.id_toy),
+                id_usuario: userId,
+            },
+        });
+
+        if (!Juguete) {
+            return new NextResponse("Juguete No encontrado", { status: 404 });
+        }
+
+        const deletedJuguete = await db.tbl_toys.delete({
+            where: {
+                id_toy: parseInt(params.id_toy),
+            },
+        });
+
+        return NextResponse.json(deletedJuguete);
+    } catch (error) {
+        console.log("[JUGUETE_ID_DELETE]", error);
+        return new NextResponse("Error Interno", { status: 500 });
+    }
+}
+
 export async function PATCH(
     req: Request,
     { params }: { params: { id_toy: string } }

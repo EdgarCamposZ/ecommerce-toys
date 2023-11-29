@@ -8,6 +8,7 @@ import { Pencil } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { tbl_categorias, tbl_toys } from "@prisma/client";
 
 import {
     Form,
@@ -16,40 +17,42 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-interface TitleFormProps {
-    initialData: {
-        nombre: string;
-    };
+import { cn } from "@/lib/utils";
+import { Combobox } from "@/components/ui/combobox";
+interface CategoryFormProps {
+    initialData: tbl_toys & { categoria: tbl_categorias | null };
     id_toy: number;
+    options: { label: string; value: number }[];
 };
 
 const formSchema = z.object({
-    nombre: z.string().min(5, {
-        message: "El nombre es requerido",
-    }),
+    id_categoria: z.number().nullable(),
 });
 
-export const TitleForm = ({
+export const CategoriesForm = ({
     initialData,
-    id_toy
-}: TitleFormProps) => {
+    id_toy,
+    options,
+}: CategoryFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const toggleEdit = () => {
         setIsEditing((current) => !current);
         if (!isEditing) {
-            form.setValue("nombre", initialData.nombre);
+            form.setValue("id_categoria", initialData?.id_categoria || null);
         }
     };
+
+    console.log(initialData)
 
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData,
+        defaultValues: {
+            id_categoria: initialData?.id_categoria || null,
+        },
     });
 
     const { isSubmitting, isValid } = form.formState;
@@ -61,28 +64,33 @@ export const TitleForm = ({
             toggleEdit();
             router.refresh();
         } catch {
-            toast.error("Sucedio un error");
+            toast.error("Sucedió un error al actualizar los datos del juguete");
         }
     }
 
     return (
         <div className="mt-6 border bg-[#cfcfcf] dark:bg-[#1f1f1f] rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Nombre del juguete
+                Categoria
                 <Button onClick={toggleEdit} variant="customghost">
                     {isEditing ? (
                         <>Cancelar</>
                     ) : (
                         <>
                             <Pencil className="h-4 w-4 mr-2" />
-                            Editar nombre
+                            Editar categoria
                         </>
                     )}
                 </Button>
             </div>
             {!isEditing && (
-                <p className="text-xl mt-2">
-                    {initialData.nombre}
+                <p className={cn(
+                    "text-sm",
+                    "text-slate-700 dark:text-white",
+                    "mt-2",
+                    !initialData.id_categoria && "italic"
+                )}>
+                    {initialData.categoria?.nombre || "* Sin categoria *"}
                 </p>
             )}
             {isEditing && (
@@ -93,13 +101,12 @@ export const TitleForm = ({
                     >
                         <FormField
                             control={form.control}
-                            name="nombre"
+                            name="id_categoria"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input
-                                            disabled={isSubmitting}
-                                            placeholder="ej. 'Naruto modo kurama'"
+                                        <Combobox
+                                            options={...options}
                                             {...field}
                                         />
                                     </FormControl>
