@@ -40,7 +40,7 @@ const HomePage = () => {
             )}>
                 <div className="flex items-center justify-center p-10">
                     <Image
-                        src="/naruto.jpg"
+                        src="/narutoo.jpeg"
                         alt="Logo"
                         height={100}
                         width={100}
@@ -53,7 +53,7 @@ const HomePage = () => {
                         Coleccionables
                     </p>
                 </div>
-                <div className="mb-10 flex items-center border shadow-sm p-4 bg-teal-500 text-sky-700 rounded-full">
+                <div className="mb-10 flex items-center border  p-4 bg-teal-500  rounded-full">
                     <Medal className="h-6 w-6 mr-2" />
                     Lo mejor en juguetes
                 </div>
@@ -89,13 +89,14 @@ const HomePage = () => {
                 "text-sm md:text-xl text-neutral-600 dark:text-neutral-400 mt-4 max-w-xs md:max-w-2xl text-center mx-auto",
                 textFont.className,
             )}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              Descubre la magia de los juguetes coleccionables, donde cada pieza es una joya única que enciende la imaginación. Con detalles meticulosos y una variedad fascinante de personajes, estos objetos se convierten en tesoros exclusivos para los amantes de la colección. Cada adquisición no solo es un juguete, sino una inversión en experiencias inolvidables. Coleccionar estos pequeños tesoros es como construir un mundo propio lleno de emociones y recuerdos. ¡Inicia tu viaje coleccionista hoy y da vida a una nueva dimensión de diversión!
             </div>
             <Button className="mt-6" size="lg" asChild>
                 <Link href="/sign-up">
                     Registrarse
                 </Link>
             </Button>
+            <br />
         </div>
     );
 };
