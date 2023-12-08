@@ -23,6 +23,12 @@ export const NavbarRoutes = () => {
                 </div>
             )}
             <div className="flex gap-x-8 ml-auto">
+                <Link href="/">
+                    <Button size="sm" variant='customghost'>
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Inicio
+                    </Button>
+                </Link>
                 {isJuguetesPage || isPlayerPage ? (
                     <Link href="/cliente">
                         <Button size="sm" variant='customghost'>

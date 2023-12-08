@@ -18,7 +18,7 @@ export const ToyCard = ({
     category
 }: ToyCardProps) => {
     return (
-        <Link href={`/juguetes/${id}`}>
+        <Link href={`/juguetes/compra/${id}`}>
             <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full bg-white dark:bg-black">
                 <div className="relative w-full aspect-video rounded-md overflow-hidden">
                     <Image

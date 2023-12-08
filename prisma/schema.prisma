@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
@@ -27,6 +24,8 @@ model tbl_toys {
 
   adjuntos tbl_adjuntos[]
 
+  compras tbl_compras[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -37,7 +36,6 @@ model tbl_categorias {
   id_categoria Int        @id @default(autoincrement())
   uuid         String     @default(uuid())
   nombre       String     @unique
-  descripcion  String?    @db.Text
   toys         tbl_toys[]
 }
 
@@ -54,4 +52,27 @@ model tbl_adjuntos {
   updatedAt DateTime @updatedAt
 
   @@index([id_toy])
+}
+
+model tbl_compras {
+  id_compra  String @id @default(uuid())
+  userId String
+
+  id_toy   Int
+  toy      tbl_toys @relation(fields: [id_toy], references: [id_toy], onDelete: Cascade)
+  toy_uuid String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt()
+
+  @@unique([userId, toy_uuid])
+  @@index([id_toy])
+}
+
+model tbl_stripe_clientes {
+  id               String @id @default(uuid())
+  userId           String @unique
+  stripeCustomerId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

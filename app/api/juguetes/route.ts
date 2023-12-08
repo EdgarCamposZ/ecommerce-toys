@@ -17,8 +17,7 @@ export async function POST(
         const juguete = await db.tbl_toys.create({
             data: {
                 id_usuario: userId,
-                nombre,
-                inventario: 0
+                nombre
             }
         });
 
