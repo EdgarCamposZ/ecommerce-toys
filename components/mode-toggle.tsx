@@ -26,7 +26,7 @@ export function ModeToggle() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setTheme("light")}>
-                    Claro
+                    Clarito
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("dark")}>
                     Oscuro
@@ -38,4 +38,3 @@ export function ModeToggle() {
         </DropdownMenu>
     )
 }
-
